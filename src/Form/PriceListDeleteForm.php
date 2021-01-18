@@ -30,7 +30,7 @@ class PriceListDeleteForm extends ContentEntityDeleteForm {
       return parent::buildForm($form, $form_state);
     }
 
-    $price_rules = $this->entityManager
+    $price_rules = $this->entityTypeManager
       ->getStorage('commerce_price_rule')
       ->loadMultiple($price_rule_ids);
 

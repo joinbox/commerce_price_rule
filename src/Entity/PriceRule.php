@@ -335,7 +335,7 @@ class PriceRule extends ContentEntityBase implements PriceRuleInterface {
       // object that is stored in the context.
       $customer_id = $context->getCustomer()->id();
       if ($customer_id) {
-        $customer = $this->entityManager()
+        $customer = $this->entityTypeManager()
           ->getStorage('user')
           ->load($customer_id);
       }
