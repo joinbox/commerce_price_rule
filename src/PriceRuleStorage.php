@@ -2,10 +2,11 @@
 
 namespace Drupal\commerce_price_rule;
 
-use Drupal\commerce\CommerceContentEntityStorage;
-use Drupal\commerce_store\Entity\StoreInterface;
 use Drupal\commerce_price_rule\Event\LoadAvailablePriceRulesEvent;
 use Drupal\commerce_price_rule\Event\PriceRuleEvents;
+
+use Drupal\commerce\CommerceContentEntityStorage;
+use Drupal\commerce_store\Entity\StoreInterface;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -13,8 +14,8 @@ use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,7 +24,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Defines the price rule storage.
  */
-class PriceRuleStorage extends CommerceContentEntityStorage implements PriceRuleStorageInterface {
+class PriceRuleStorage extends CommerceContentEntityStorage implements
+  PriceRuleStorageInterface {
 
   /**
    * The time.
@@ -86,7 +88,10 @@ class PriceRuleStorage extends CommerceContentEntityStorage implements PriceRule
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+  public static function createInstance(
+    ContainerInterface $container,
+    EntityTypeInterface $entity_type
+  ) {
     return new static(
       $entity_type,
       $container->get('database'),

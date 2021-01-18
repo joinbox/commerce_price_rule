@@ -38,7 +38,10 @@ class PriceListDeleteForm extends ContentEntityDeleteForm {
     $price_list_id = $this->getEntity()->id();
 
     foreach ($price_rules as $price_rule) {
-      $calculation_configuration = $price_rule->getCalculation()->getConfiguration();
+      $calculation_configuration = $price_rule
+        ->getCalculation()
+        ->getConfiguration();
+
       if ($calculation_configuration['price_list_id'] == $price_list_id) {
         $rule_exists = TRUE;
         break;
@@ -47,7 +50,11 @@ class PriceListDeleteForm extends ContentEntityDeleteForm {
 
     if ($rule_exists) {
       $form['cannot_delete'] = [
-        '#markup' => $this->t('You cannot delete this price list because it is currently associated with one or more price rules. You should remove any associations by editing the price rules that use this price list before trying again.'),
+        '#markup' => $this->t(
+          'You cannot delete this price list because it is currently associated
+          with one or more price rules. You should remove any associations by
+          editing the price rules that use this price list before trying again.'
+        ),
       ];
 
       return $form;
@@ -65,7 +72,10 @@ class PriceListDeleteForm extends ContentEntityDeleteForm {
 
     if ($list_item_count) {
       $form['cannot_delete'] = [
-        '#markup' => $this->t('You can only delete an empty price list. Please delete all list items or move them to another list and try again.'),
+        '#markup' => $this->t(
+          'You can only delete an empty price list. Please delete all list items
+          or move them to another list and try again.'
+        ),
       ];
 
       return $form;

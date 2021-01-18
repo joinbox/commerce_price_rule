@@ -3,12 +3,14 @@
 namespace Drupal\commerce_price_rule\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
+
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,15 +22,20 @@ class PriceListItemForm extends ContentEntityForm {
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection
+   *
+   * @I Remove injected database connection that seems to be unused
+   *    type     : task
+   *    priority : low
+   *    labels   : coding-standards, 2.0@alpha
    */
-  protected $database_connection;
+  protected $databaseConnection;
 
   /**
    * The currently active route match object.
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  protected $route_match;
+  protected $routeMatch;
 
   /**
    * Constructs a PriceListItemForm object.
@@ -57,8 +64,8 @@ class PriceListItemForm extends ContentEntityForm {
       $time
     );
 
-    $this->database_connection = $database_connection;
-    $this->route_match = $route_match;
+    $this->databaseConnection = $database_connection;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -82,7 +89,8 @@ class PriceListItemForm extends ContentEntityForm {
 
     // Move the price list field to an Advanced fieldset. Moving items between
     // lists would not be very common and while we want to make it possible we
-    // want to make it a bit more difficult to prevent accidentally moving items.
+    // want to make it a bit more difficult to prevent accidentally moving
+    // items.
     $form['advanced'] = [
       '#type' => 'details',
       '#title' => $this->t('Advanced'),
@@ -98,7 +106,7 @@ class PriceListItemForm extends ContentEntityForm {
       return $form;
     }
 
-    $price_list_id = $this->route_match
+    $price_list_id = $this->routeMatch
       ->getParameter('commerce_price_rule_list');
     if (!$price_list_id) {
       return $form;

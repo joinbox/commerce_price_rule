@@ -38,7 +38,8 @@ class PriceResolver implements PriceResolverInterface {
     Context $context
   ) {
     // Load all available price rules for the given store.
-    $price_rule_storage = $this->entityTypeManager->getStorage('commerce_price_rule');
+    $price_rule_storage = $this->entityTypeManager
+      ->getStorage('commerce_price_rule');
     $price_rules = $price_rule_storage->loadAvailable($context->getStore());
 
     // Find the first price rule that is available and applicable. Apply it
@@ -47,11 +48,17 @@ class PriceResolver implements PriceResolverInterface {
     // the next price rule.
     foreach ($price_rules as $price_rule) {
       $available = $price_rule->available($entity, $quantity, $context, []);
-      if ($available && $price_rule->applies($entity, $quantity, $context, [])) {
-        $price = $price_rule->calculate($entity, $quantity, $context);
-        if ($price) {
-          return $price;
-        }
+      if (!$available) {
+        continue;
+      }
+
+      if (!$price_rule->applies($entity, $quantity, $context, [])) {
+        continue;
+      }
+
+      $price = $price_rule->calculate($entity, $quantity, $context);
+      if ($price) {
+        return $price;
       }
     }
   }

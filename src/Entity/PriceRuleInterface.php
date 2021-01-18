@@ -4,14 +4,18 @@ namespace Drupal\commerce_price_rule\Entity;
 
 use Drupal\commerce\Context;
 use Drupal\commerce\PurchasableEntityInterface;
+use Drupal\commerce_price_rule\Plugin\Commerce\PriceRuleCalculation\PriceRuleCalculationInterface;
 use Drupal\commerce_store\Entity\EntityStoresInterface;
+
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
  * Defines the interface for price rules.
  */
-interface PriceRuleInterface extends ContentEntityInterface, EntityStoresInterface {
+interface PriceRuleInterface extends
+  ContentEntityInterface,
+  EntityStoresInterface {
 
   /**
    * Gets the price rule name.
@@ -65,7 +69,7 @@ interface PriceRuleInterface extends ContentEntityInterface, EntityStoresInterfa
    *
    * @return $this
    */
-  public function setCalculation($calculation);
+  public function setCalculation(PriceRuleCalculationInterface $calculation);
 
   /**
    * Gets the conditions.
@@ -78,7 +82,7 @@ interface PriceRuleInterface extends ContentEntityInterface, EntityStoresInterfa
   /**
    * Sets the conditions.
    *
-   * @param \Drupal\commerce\Plugin\Commerce\Condition\ConditionInterface[]
+   * @param \Drupal\commerce\Plugin\Commerce\Condition\ConditionInterface[] $conditions
    *   The conditions.
    *
    * @return $this
@@ -162,11 +166,9 @@ interface PriceRuleInterface extends ContentEntityInterface, EntityStoresInterfa
    *
    * @param \Drupal\commerce\PurchasableEntityInterface $entity
    *   The product.
-   *
    * @param string $quantity
    *   The quantity of products.
-   *
-   * @param \Drupal\commerce\Context;
+   * @param \Drupal\commerce\Context $context
    *   The context, which includes the customer, the store and the time.
    *
    * @return bool
@@ -183,11 +185,9 @@ interface PriceRuleInterface extends ContentEntityInterface, EntityStoresInterfa
    *
    * @param \Drupal\commerce\PurchasableEntityInterface $entity
    *   The product.
-   *
    * @param string $quantity
    *   The quantity of products.
-   *
-   * @param \Drupal\commerce\Context;
+   * @param \Drupal\commerce\Context $context
    *   The context, which includes the customer, the store and the time.
    *
    * @return bool
@@ -204,14 +204,12 @@ interface PriceRuleInterface extends ContentEntityInterface, EntityStoresInterfa
    *
    * @param \Drupal\commerce\PurchasableEntityInterface $entity
    *   The product.
-   *
    * @param string $quantity
    *   The quantity of products.
-   *
-   * @param \Drupal\commerce\Context;
+   * @param \Drupal\commerce\Context $context
    *   The context, which includes the customer, the store and the time.
    *
-   * @return \Drupal\commerce\Price|NULL
+   * @return \Drupal\commerce\Price|null
    *   The calculated price if it can be calculated, NULL otherwise.
    */
   public function calculate(
@@ -219,4 +217,5 @@ interface PriceRuleInterface extends ContentEntityInterface, EntityStoresInterfa
     $quantity,
     Context $context
   );
+
 }

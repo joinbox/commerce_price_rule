@@ -9,9 +9,9 @@ use Symfony\Component\EventDispatcher\Event;
  * Defines the load available price rules event.
  *
  * The default behavior is to load all price rules and evaluate them one by one,
- * until a rule returns a calculated price for the product variation. Modules may
- * want to customize the query so that only relevant price rules are loaded and
- * evaluated (relevant based on application or moudle-specific logic).
+ * until a rule returns a calculated price for the product variation. Modules
+ * may want to customize the query so that only relevant price rules are loaded
+ * and evaluated (relevant based on application or moudle-specific logic).
  */
 class LoadAvailablePriceRulesEvent extends Event {
 

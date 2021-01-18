@@ -3,10 +3,10 @@
 namespace Drupal\commerce_price_rule;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Manages discovery and instantiation of price rule calculation plugins.
@@ -51,7 +51,10 @@ class PriceRuleCalculationManager extends DefaultPluginManager {
     );
 
     $this->alterInfo('commerce_price_rule_calculation_info');
-    $this->setCacheBackend($cache_backend, 'commerce_price_rule_calculation_plugins');
+    $this->setCacheBackend(
+      $cache_backend,
+      'commerce_price_rule_calculation_plugins'
+    );
     $this->entityTypeManager = $entity_type_manager;
   }
 

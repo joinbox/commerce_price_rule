@@ -13,7 +13,7 @@ interface PriceListItemInterface extends ContentEntityInterface {
   /**
    * Gets the parent price list.
    *
-   * @return PriceListInterface
+   * @return \Drupal\commerce_price_rule\Entity\PriceListInterface
    *   The price list entity.
    */
   public function getPriceList();
@@ -113,4 +113,5 @@ interface PriceListItemInterface extends ContentEntityInterface {
    * @return $this
    */
   public function setEnabled($enabled);
+
 }

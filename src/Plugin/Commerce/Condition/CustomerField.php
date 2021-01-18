@@ -3,7 +3,6 @@
 namespace Drupal\commerce_price_rule\Plugin\Commerce\Condition;
 
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionBase;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -64,7 +63,10 @@ class CustomerField extends ConditionBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     // Get eligible field options.
@@ -109,7 +111,11 @@ class CustomerField extends ConditionBase {
       '#type' => 'textfield',
       '#title' => $this->t('Value'),
       '#default_value' => $field_value,
-      '#description' => $this->t('The value that the field is required to have in order for the condition to pass. Leave empty if you want the condition to pass if the field has no value.'),
+      '#description' => $this->t(
+        'The value that the field is required to have in order for the condition
+        to pass. Leave empty if you want the condition to pass if the field has
+        no value.'
+      ),
     ];
 
     return $form;
@@ -118,7 +124,10 @@ class CustomerField extends ConditionBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);

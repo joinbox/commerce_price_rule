@@ -32,7 +32,10 @@ class ReferenceablePluginTypesSubscriber implements EventSubscriberInterface {
    */
   public function registerTypes(ReferenceablePluginTypesEvent $event) {
     $plugin_types = $event->getPluginTypes();
-    $plugin_types['commerce_price_rule_calculation'] = $this->t('Price rule calculation');
+    $plugin_types['commerce_price_rule_calculation'] = $this->t(
+      'Price rule calculation'
+    );
+
     $event->setPluginTypes($plugin_types);
   }
 

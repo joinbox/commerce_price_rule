@@ -3,11 +3,13 @@
 namespace Drupal\commerce_price_rule\Plugin\Commerce\Condition;
 
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionBase;
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a condition that checks for a user field value.
@@ -20,7 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   entity_type = "user",
  * )
  */
-class CustomerIpAddress extends ConditionBase implements ContainerFactoryPluginInterface {
+class CustomerIpAddress extends ConditionBase implements
+  ContainerFactoryPluginInterface {
 
   /**
    * Indicates that the condition is an IP address whitelisting filter.
@@ -48,7 +51,7 @@ class CustomerIpAddress extends ConditionBase implements ContainerFactoryPluginI
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Symfony\Component\HttpFoundation\RequestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    */
   public function __construct(
@@ -102,7 +105,11 @@ class CustomerIpAddress extends ConditionBase implements ContainerFactoryPluginI
     $form['type'] = [
       '#type' => 'radios',
       '#title' => $this->t('Type'),
-      '#description' => $this->t('When creating a whitelist, the price rule will apply only for listed IP addresses. When creating a blacklist, the price rule will apply to all IP addresses apart from the listed.'),
+      '#description' => $this->t(
+        'When creating a whitelist, the price rule will apply only for listed IP
+        addresses. When creating a blacklist, the price rule will apply to all
+        IP addresses apart from the listed.'
+      ),
       '#default_value' => $this->configuration['type'],
       '#options' => [
         self::TYPE_WHITELIST => $this->t('Whitelist'),
@@ -114,7 +121,9 @@ class CustomerIpAddress extends ConditionBase implements ContainerFactoryPluginI
     $form['whitelist'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Whitelist'),
-      '#description' => $this->t('Enter the IP addresses you would like to whitelist, one per line.'),
+      '#description' => $this->t(
+        'Enter the IP addresses you would like to whitelist, one per line.'
+      ),
       '#default_value' => $this->arrayToText($this->configuration['whitelist']),
       '#states' => [
         'visible' => [
@@ -126,7 +135,9 @@ class CustomerIpAddress extends ConditionBase implements ContainerFactoryPluginI
     $form['blacklist'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Blacklist'),
-      '#description' => $this->t('Enter the IP addresses you would like to blacklist, one per line.'),
+      '#description' => $this->t(
+        'Enter the IP addresses you would like to blacklist, one per line.'
+      ),
       '#default_value' => $this->arrayToText($this->configuration['blacklist']),
       '#states' => [
         'visible' => [
@@ -141,13 +152,20 @@ class CustomerIpAddress extends ConditionBase implements ContainerFactoryPluginI
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);
     $this->configuration['type'] = $values['type'];
-    $this->configuration['whitelist'] = $this->textToArray($values['whitelist']);
-    $this->configuration['blacklist'] = $this->textToArray($values['blacklist']);
+    $this->configuration['whitelist'] = $this->textToArray(
+      $values['whitelist']
+    );
+    $this->configuration['blacklist'] = $this->textToArray(
+      $values['blacklist']
+    );
   }
 
   /**
@@ -181,7 +199,9 @@ class CustomerIpAddress extends ConditionBase implements ContainerFactoryPluginI
    */
   protected function textToArray($list) {
     return array_map(
-      function ($item) { return trim($item); },
+      function ($item) {
+        return trim($item);
+      },
       explode("\n", $list)
     );
   }
@@ -195,7 +215,7 @@ class CustomerIpAddress extends ConditionBase implements ContainerFactoryPluginI
    * @return array
    *   The textual list.
    */
-  protected function arrayToText($list) {
+  protected function arrayToText(array $list) {
     return implode("\n", $list);
   }
 

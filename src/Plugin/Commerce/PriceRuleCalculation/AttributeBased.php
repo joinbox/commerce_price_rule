@@ -5,14 +5,13 @@ namespace Drupal\commerce_price_rule\Plugin\Commerce\PriceRuleCalculation;
 use Drupal\commerce_price_rule\Entity\PriceRuleInterface;
 
 use Drupal\commerce\Context;
-use Drupal\commerce_price\Price;
 use Drupal\commerce_price\RounderInterface;
 use Drupal\commerce_product\Entity\ProductVariationInterface;
 use Drupal\commerce_product\ProductAttributeFieldManagerInterface;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -136,12 +135,21 @@ class AttributeBased extends PriceRuleCalculationBase {
 
     // A short explanation of how attribute-based pricing works.
     $form['help'] = [
-      '#markup' => '<p>' . $this->t('Attribute-based pricing will calculate the total price of all attributes for the given product variation and it will add the result to the base price of the variation. Note that attribute-based pricing will automatically detect and apply the calculation to all variation types that have the attributes configured below. If you want to limit this calculation to certain variation types only please use the relevant price rule condition.') . '</p>',
+      '#markup' => '<p>' . $this->t(
+        'Attribute-based pricing will calculate the total price of all
+        attributes for the given product variation and it will add the result to
+        the base price of the variation. Note that attribute-based pricing will
+        automatically detect and apply the calculation to all variation types
+        that have the attributes configured below. If you want to limit this
+        calculation to certain variation types only please use the relevant
+        price rule condition.'
+      ) . '</p>',
     ];
 
     // Fieldset for attribute-related configuration.
     $description = $this->t(
-      'Configure the price fields from which the price will be fetched for each attribute.'
+      'Configure the price fields from which the price will be fetched for each
+      attribute.'
     );
     $form['attribute_field_map'] = [
       '#type' => 'details',
@@ -174,7 +182,10 @@ class AttributeBased extends PriceRuleCalculationBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);

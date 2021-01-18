@@ -2,14 +2,17 @@
 
 namespace Drupal\commerce_price_rule\Plugin\Commerce\PriceRuleCalculation;
 
+use Drupal\commerce_price_rule\Entity\PriceRuleInterface;
+
 use Drupal\commerce\Context;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_price\RounderInterface;
-use Drupal\commerce_price_rule\Entity\PriceRuleInterface;
+
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,18 +27,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class PriceList extends PriceRuleCalculationBase {
 
   /**
-   * The entity manager
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entity_type_manager;
+  protected $entityTypeManager;
 
   /**
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database_connection;
+  protected $databaseConnection;
 
   /**
    * Constructs a new PriceList object.
@@ -68,8 +71,8 @@ class PriceList extends PriceRuleCalculationBase {
       $rounder
     );
 
-    $this->entity_type_manager = $entity_type_manager;
-    $this->database_connection = $database_connection;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->databaseConnection = $database_connection;
   }
 
   /**
@@ -103,12 +106,15 @@ class PriceList extends PriceRuleCalculationBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form += parent::buildConfigurationForm($form, $form_state);
 
     $price_list = $this->configuration['price_list_id'];
     if ($price_list) {
-      $price_list = $this->entity_type_manager
+      $price_list = $this->entityTypeManager
         ->getStorage('commerce_price_rule_list')
         ->load($price_list);
     }
@@ -116,7 +122,11 @@ class PriceList extends PriceRuleCalculationBase {
     $form['price_list'] = [
       '#type' => 'entity_autocomplete',
       '#title' => $this->t('Price list'),
-      '#description' => $this->t('The list to get the prices from. If no list is provided when creating a new price rule, a list with the same name as the rule will be created and associated with it for convenience.'),
+      '#description' => $this->t(
+        'The list to get the prices from. If no list is provided when creating a
+        new price rule, a list with the same name as the rule will be created
+        and associated with it for convenience.'
+      ),
       '#default_value' => $price_list,
       '#target_type' => 'commerce_price_rule_list',
       '#required' => TRUE,
@@ -128,7 +138,10 @@ class PriceList extends PriceRuleCalculationBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);
@@ -138,7 +151,7 @@ class PriceList extends PriceRuleCalculationBase {
   /**
    * Gets the price list associated with the calculation.
    *
-   * @return \Drupal\commerce_price_rule\Entity\PriceListInterface
+   * @return \Drupal\commerce_price_rule\Entity\PriceListInterface|null
    *   The calculation's price list.
    */
   public function getList() {
@@ -146,7 +159,7 @@ class PriceList extends PriceRuleCalculationBase {
       return;
     }
 
-    return $this->entity_type_manager
+    return $this->entityTypeManager
       ->getStorage('commerce_price_rule_list')
       ->load($this->configuration['price_list_id']);
   }
@@ -181,7 +194,7 @@ class PriceList extends PriceRuleCalculationBase {
 
     // Performance is important here, load only the required fields directly
     // from the database.
-    $query = $this->database_connection
+    $query = $this->databaseConnection
       ->select('commerce_price_rule_list_item', 'li')
       ->fields('li', ['price__number', 'price__currency_code'])
       ->condition('li.price_list_id', $this->configuration['price_list_id'])

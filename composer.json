@@ -1,7 +1,7 @@
 {
     "name": "drupal/commerce_price_rule",
     "type": "drupal-module",
-    "description": "A Drupal 8 module that provides functionality for personalizing product pricing based on chosen conditions.",
+    "description": "A Drupal module that provides functionality for personalizing product pricing based on chosen conditions.",
     "keywords": ["Drupal"],
     "license": "GPL-2.0+",
     "homepage": "https://www.drupal.org/project/commerce_price_rule",

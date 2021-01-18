@@ -2,8 +2,10 @@
 
 namespace Drupal\commerce_price_rule\Plugin\Commerce\PriceRuleCalculation;
 
-use Drupal\commerce\Context;
 use Drupal\commerce_price_rule\Entity\PriceRuleInterface;
+
+use Drupal\commerce\Context;
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -40,7 +42,10 @@ class PercentageOff extends PriceRuleCalculationBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form += parent::buildConfigurationForm($form, $form_state);
 
     $form['amount'] = [
@@ -61,17 +66,26 @@ class PercentageOff extends PriceRuleCalculationBase {
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     $values = $form_state->getValue($form['#parents']);
     if (empty($values['amount'])) {
-      $form_state->setError($form, $this->t('Percentage amount cannot be empty.'));
+      $form_state->setError(
+        $form,
+        $this->t('Percentage amount cannot be empty.')
+      );
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);
@@ -98,7 +112,9 @@ class PercentageOff extends PriceRuleCalculationBase {
     Context $context
   ) {
     $this->assertEntity($entity);
-    $adjusted_price = $entity->getPrice()->multiply((string) (1 - $this->getAmount()));
+    $adjusted_price = $entity->getPrice()->multiply(
+      (string) (1 - $this->getAmount())
+    );
     $adjusted_price = $this->rounder->round($adjusted_price);
 
     return $adjusted_price;

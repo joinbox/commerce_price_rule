@@ -4,10 +4,12 @@ namespace Drupal\commerce_price_rule\Plugin\Commerce\Condition;
 
 use Drupal\commerce\EntityHelper;
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionBase;
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,14 +23,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   entity_type = "commerce_product_variation",
  * )
  */
-class ProductVariationType extends ConditionBase implements ContainerFactoryPluginInterface {
+class ProductVariationType extends ConditionBase implements
+  ContainerFactoryPluginInterface {
 
   /**
    * The product variation type storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $product_variation_type_storage;
+  protected $variationTypeStorage;
 
   /**
    * Constructs a new ProductVariationType object.
@@ -51,7 +54,8 @@ class ProductVariationType extends ConditionBase implements ContainerFactoryPlug
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->product_variation_type_storage = $entity_type_manager->getStorage('commerce_product_variation_type');
+    $this->variationTypeStorage = $entity_type_manager
+      ->getStorage('commerce_product_variation_type');
   }
 
   /**
@@ -83,11 +87,14 @@ class ProductVariationType extends ConditionBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $product_variation_types = EntityHelper::extractLabels(
-      $this->product_variation_type_storage->loadMultiple()
+      $this->variationTypeStorage->loadMultiple()
     );
     $form['product_variation_types'] = [
       '#type' => 'checkboxes',
@@ -104,13 +111,16 @@ class ProductVariationType extends ConditionBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);
-    $product_variation_types = array_filter($values['product_variation_types']);
-    if ($product_variation_types) {
-      $this->configuration['product_variation_types'] = $product_variation_types;
+    $variation_types = array_filter($values['product_variation_types']);
+    if ($variation_types) {
+      $this->configuration['product_variation_types'] = $variation_types;
     }
   }
 

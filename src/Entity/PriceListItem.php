@@ -3,9 +3,10 @@
 namespace Drupal\commerce_price_rule\Entity;
 
 use Drupal\commerce_price\Price;
-use Drupal\Core\Field\BaseFieldDefinition;
+
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines the Price list item entity class.
@@ -48,7 +49,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   },
  * )
  */
-class PriceListItem extends ContentEntityBase implements PriceListItemInterface {
+class PriceListItem extends ContentEntityBase implements
+  PriceListItemInterface {
 
   /**
    * {@inheritdoc}
@@ -141,7 +143,9 @@ class PriceListItem extends ContentEntityBase implements PriceListItemInterface 
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+  public static function baseFieldDefinitions(
+    EntityTypeInterface $entity_type
+  ) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['price_list_id'] = BaseFieldDefinition::create('entity_reference')
@@ -163,7 +167,9 @@ class PriceListItem extends ContentEntityBase implements PriceListItemInterface 
 
     $fields['product_variation_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Product variation'))
-      ->setDescription(t('The product variation that the price should be applied to.'))
+      ->setDescription(t(
+        'The product variation that the price should be applied to.'
+      ))
       ->setSetting('target_type', 'commerce_product_variation')
       ->setRequired(TRUE)
       ->setDisplayOptions('form', [
@@ -196,7 +202,9 @@ class PriceListItem extends ContentEntityBase implements PriceListItemInterface 
 
     $fields['min_quantity'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Minimum Quantity'))
-      ->setDescription(t('The minimum number of purchased units that the price will apply to.'))
+      ->setDescription(t(
+        'The minimum number of purchased units that the price will apply to.'
+      ))
       ->setSetting('unsigned', TRUE)
       ->setSetting('min', 1)
       ->setDefaultValue(1)
@@ -209,7 +217,9 @@ class PriceListItem extends ContentEntityBase implements PriceListItemInterface 
 
     $fields['max_quantity'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Maximum Quantity'))
-      ->setDescription(t('The maximum number of purchased units that the price will apply to.'))
+      ->setDescription(t(
+        'The maximum number of purchased units that the price will apply to.'
+      ))
       ->setSetting('unsigned', TRUE)
       ->setSetting('min', 1)
       ->setDefaultValue(1)

@@ -2,9 +2,11 @@
 
 namespace Drupal\commerce_price_rule\Plugin\Commerce\PriceRuleCalculation;
 
+use Drupal\commerce_price_rule\Entity\PriceRuleInterface;
+
 use Drupal\commerce\Context;
 use Drupal\commerce_price\Price;
-use Drupal\commerce_price_rule\Entity\PriceRuleInterface;
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 

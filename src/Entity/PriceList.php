@@ -2,9 +2,9 @@
 
 namespace Drupal\commerce_price_rule\Entity;
 
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines the Price list entity class.
@@ -88,7 +88,9 @@ class PriceList extends ContentEntityBase implements PriceListInterface {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+  public static function baseFieldDefinitions(
+    EntityTypeInterface $entity_type
+  ) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['name'] = BaseFieldDefinition::create('string')
@@ -109,7 +111,10 @@ class PriceList extends ContentEntityBase implements PriceListInterface {
 
     $fields['description'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Description'))
-      ->setDescription(t('Additional information about the price list for administrative purposes.'))
+      ->setDescription(t(
+        'Additional information about the price list for administrative
+        purposes.'
+      ))
       ->setTranslatable(TRUE)
       ->setDefaultValue('')
       ->setDisplayOptions('form', [

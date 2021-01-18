@@ -4,11 +4,13 @@ namespace Drupal\commerce_price_rule;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,6 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * whether the View is enough or whether we will need some more advanced display
  * such as adding a column with the price rules that each list is associated
  * with.
+ *
+ * @I Inject string translation service
+ *    type     : task
+ *    priority : low
+ *    labels   : coding-standards, 2.0@alpha
+ *    note     : We don't do it now to not break any class potentially extending
+ *               this one. Actually, this injection should happen in
+ *               EntityListBuilder in core.
  */
 class PriceListListBuilder extends EntityListBuilder implements FormInterface {
 
@@ -28,7 +38,7 @@ class PriceListListBuilder extends EntityListBuilder implements FormInterface {
    *
    * @var \Drupal\Core\Form\FormBuilderInterface
    */
-  protected $form_builder;
+  protected $formBuilder;
 
   /**
    * The entities being listed.
@@ -54,7 +64,7 @@ class PriceListListBuilder extends EntityListBuilder implements FormInterface {
   ) {
     parent::__construct($entity_type, $storage);
 
-    $this->form_builder = $form_builder;
+    $this->formBuilder = $form_builder;
   }
 
   /**
@@ -112,7 +122,7 @@ class PriceListListBuilder extends EntityListBuilder implements FormInterface {
    * {@inheritdoc}
    */
   public function render() {
-    $build = $this->form_builder->getForm($this);
+    $build = $this->formBuilder->getForm($this);
     // Only add the pager if a limit is specified.
     if ($this->limit) {
       $build['pager'] = [
@@ -168,6 +178,24 @@ class PriceListListBuilder extends EntityListBuilder implements FormInterface {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Nothing to do upon submission.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+
+    $operations['manage_items'] = [
+      'title' => $this->t('Manage Items'),
+      'url' => Url::fromRoute(
+        'view.commerce_price_rule_manage_price_list_items.page',
+        ['arg_0' => $entity->id()]
+      ),
+      'weight' => 0,
+    ];
+
+    return $operations;
   }
 
 }

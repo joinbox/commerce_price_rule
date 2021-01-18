@@ -3,10 +3,12 @@
 namespace Drupal\commerce_price_rule\Plugin\Commerce\Condition;
 
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionBase;
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,7 +29,7 @@ class Product extends ConditionBase implements ContainerFactoryPluginInterface {
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $product_storage;
+  protected $productStorage;
 
   /**
    * Constructs a new Product object.
@@ -50,7 +52,8 @@ class Product extends ConditionBase implements ContainerFactoryPluginInterface {
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->product_storage = $entity_type_manager->getStorage('commerce_product');
+    $this->productStorage = $entity_type_manager
+      ->getStorage('commerce_product');
   }
 
   /**
@@ -82,13 +85,16 @@ class Product extends ConditionBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $products = NULL;
     $product_ids = array_column($this->configuration['products'], 'product_id');
     if (!empty($product_ids)) {
-      $products = $this->product_storage->loadMultiple($product_ids);
+      $products = $this->productStorage->loadMultiple($product_ids);
     }
     $form['products'] = [
       '#type' => 'entity_autocomplete',
@@ -105,7 +111,10 @@ class Product extends ConditionBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);

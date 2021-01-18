@@ -63,7 +63,10 @@ class CustomerPrivateTempStore extends ConditionBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $form['private_tempstore'] = [
@@ -71,7 +74,9 @@ class CustomerPrivateTempStore extends ConditionBase {
       '#title' => $this->t('Store name'),
       '#default_value' => $this->configuration['private_tempstore'],
       '#required' => TRUE,
-      '#description' => $this->t('The name of the private temporary store that holds the entry'),
+      '#description' => $this->t(
+        'The name of the private temporary store that holds the entry.'
+      ),
     ];
 
     $form['key'] = [
@@ -79,14 +84,21 @@ class CustomerPrivateTempStore extends ConditionBase {
       '#title' => $this->t('Key'),
       '#default_value' => $this->configuration['key'],
       '#required' => TRUE,
-      '#description' => $this->t('The key of the entry in the user\'s private temporary store that should be matching the value.'),
+      '#description' => $this->t(
+        "The key of the entry in the user's private temporary store that should
+        be matching the value."
+      ),
     ];
 
     $form['value'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Value'),
       '#default_value' => $this->configuration['value'],
-      '#description' => $this->t('The value that the entry is required to have in order for the condition to pass. Leave empty if you want the condition to pass if the entry is not set or it has an empty string as its value.'),
+      '#description' => $this->t(
+        'The value that the entry is required to have in order for the condition
+        to pass. Leave empty if you want the condition to pass if the entry is
+        not set or it has an empty string as its value.'
+      ),
     ];
 
     // @todo Support operators such as equal, not equal, contains
@@ -95,14 +107,20 @@ class CustomerPrivateTempStore extends ConditionBase {
       '#type' => 'checkbox',
       '#title' => $this->t('The value is an array element'),
       '#default_value' => $this->configuration['in_array'],
-      '#description' => $this->t('When checked, the entry\'s value will need to be an array with one of its elements matching the expected value.'),
+      '#description' => $this->t(
+        "When checked, the entry's value will need to be an array with one of
+        its elements matching the expected value."
+      ),
     ];
 
     $form['match_null'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Pass if the entry does not exist'),
       '#default_value' => $this->configuration['match_null'],
-      '#description' => $this->t('When checked, the condition will pass if the entry does not exist. If the entry exist, its value will still be compared to the defined value.'),
+      '#description' => $this->t(
+        'When checked, the condition will pass if the entry does not exist. If
+        the entry exist, its value will still be compared to the defined value.'
+      ),
     ];
 
     return $form;
@@ -111,7 +129,10 @@ class CustomerPrivateTempStore extends ConditionBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);

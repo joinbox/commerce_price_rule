@@ -2,8 +2,10 @@
 
 namespace Drupal\commerce_price_rule\Plugin\Commerce\PriceRuleCalculation;
 
-use Drupal\commerce\Context;
 use Drupal\commerce_price_rule\Entity\PriceRuleInterface;
+
+use Drupal\commerce\Context;
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -111,7 +113,9 @@ class PercentageAdded extends PriceRuleCalculationBase {
   ) {
     $this->assertEntity($entity);
 
-    $adjusted_price = $entity->getPrice()->multiply((string) (1 + $this->getAmount()));
+    $adjusted_price = $entity->getPrice()->multiply(
+      (string) (1 + $this->getAmount())
+    );
     $adjusted_price = $this->rounder->round($adjusted_price);
 
     return $adjusted_price;

@@ -18,7 +18,7 @@ class PriceListItemAdd extends LocalActionDefault {
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  protected $route_match;
+  protected $routeMatch;
 
   /**
    * The redirect destination.
@@ -58,7 +58,7 @@ class PriceListItemAdd extends LocalActionDefault {
       $route_provider
     );
 
-    $this->route_match = $route_match;
+    $this->routeMatch = $route_match;
     $this->redirectDestination = $redirect_destination;
   }
 
@@ -90,7 +90,7 @@ class PriceListItemAdd extends LocalActionDefault {
     // We add the link to the View provided for managing list items. The list id
     // is not available in the normal parameters, we have to manually get it as
     // the 1st view argument.
-    $price_list_id = $this->route_match->getParameter('arg_0');
+    $price_list_id = $this->routeMatch->getParameter('arg_0');
     if (!isset($parameters['commerce_price_rule_list']) && $price_list_id) {
       $parameters['commerce_price_rule_list'] = $price_list_id;
     }

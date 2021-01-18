@@ -3,17 +3,21 @@
 namespace Drupal\commerce_price_rule\Plugin\Commerce\PriceRuleCalculation;
 
 use Drupal\commerce_price\RounderInterface;
+
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the base class for calculations.
  */
-abstract class PriceRuleCalculationBase extends PluginBase implements PriceRuleCalculationInterface, ContainerFactoryPluginInterface {
+abstract class PriceRuleCalculationBase extends PluginBase implements
+  PriceRuleCalculationInterface,
+  ContainerFactoryPluginInterface {
 
   /**
    * The rounder.
@@ -49,7 +53,12 @@ abstract class PriceRuleCalculationBase extends PluginBase implements PriceRuleC
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $configuration,
       $plugin_id,
@@ -83,26 +92,38 @@ abstract class PriceRuleCalculationBase extends PluginBase implements PriceRuleC
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $configuration);
+    $this->configuration = NestedArray::mergeDeep(
+      $this->defaultConfiguration(),
+      $configuration
+    );
     return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     return $form;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {}
+  public function validateConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {}
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {}
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {}
 
   /**
    * {@inheritdoc}

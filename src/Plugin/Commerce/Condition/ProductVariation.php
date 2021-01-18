@@ -3,10 +3,12 @@
 namespace Drupal\commerce_price_rule\Plugin\Commerce\Condition;
 
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionBase;
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,14 +22,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   entity_type = "commerce_product_variation",
  * )
  */
-class ProductVariation extends ConditionBase implements ContainerFactoryPluginInterface {
+class ProductVariation extends ConditionBase implements
+  ContainerFactoryPluginInterface {
 
   /**
    * The product variation storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $product_variation_storage;
+  protected $variationStorage;
 
   /**
    * Constructs a new ProductVariation object.
@@ -50,7 +53,8 @@ class ProductVariation extends ConditionBase implements ContainerFactoryPluginIn
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->product_variation_storage = $entity_type_manager->getStorage('commerce_product_variation');
+    $this->variationStorage = $entity_type_manager
+      ->getStorage('commerce_product_variation');
   }
 
   /**
@@ -82,13 +86,20 @@ class ProductVariation extends ConditionBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $product_variations = NULL;
-    $product_variation_ids = array_column($this->configuration['product_variations'], 'product_variation_id');
+    $product_variation_ids = array_column(
+      $this->configuration['product_variations'],
+      'product_variation_id'
+    );
     if (!empty($product_variation_ids)) {
-      $product_variations = $this->product_variation_storage->loadMultiple($product_variation_ids);
+      $product_variations = $this->variationStorage
+        ->loadMultiple($product_variation_ids);
     }
     $form['product_variations'] = [
       '#type' => 'entity_autocomplete',
@@ -105,7 +116,10 @@ class ProductVariation extends ConditionBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);
@@ -122,7 +136,10 @@ class ProductVariation extends ConditionBase implements ContainerFactoryPluginIn
    */
   public function evaluate(EntityInterface $entity) {
     $this->assertEntity($entity);
-    $product_variation_ids = array_column($this->configuration['product_variations'], 'product_variation_id');
+    $product_variation_ids = array_column(
+      $this->configuration['product_variations'],
+      'product_variation_id'
+    );
     return in_array($entity->id(), $product_variation_ids);
   }
 

@@ -4,15 +4,25 @@ namespace Drupal\commerce_price_rule;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the list builder for price rules.
+ *
+ * @I Inject string translation service
+ *    type     : task
+ *    priority : low
+ *    labels   : coding-standards, 2.0@alpha
+ *    note     : We don't do it now to not break any class potentially extending
+ *               this one. Actually, this injection should happen in
+ *               EntityListBuilder in core.
  */
 class PriceRuleListBuilder extends EntityListBuilder implements FormInterface {
 
@@ -123,9 +133,12 @@ class PriceRuleListBuilder extends EntityListBuilder implements FormInterface {
       $store_names = $this->t('More than 10 stores.');
     }
     else {
-      $store_names = array_map(function($store) {
-        return $store->getName();
-      }, $stores);
+      $store_names = array_map(
+        function ($store) {
+          return $store->getName();
+        },
+        $stores
+      );
     }
     $row['stores'] = implode(', ', $store_names);
 
@@ -140,7 +153,10 @@ class PriceRuleListBuilder extends EntityListBuilder implements FormInterface {
     if ($this->hasTableDrag) {
       $row['weight'] = [
         '#type' => 'weight',
-        '#title' => $this->t('Weight for @title', ['@title' => $entity->label()]),
+        '#title' => $this->t(
+          'Weight for @title',
+          ['@title' => $entity->label()]
+        ),
         '#title_display' => 'invisible',
         '#default_value' => $entity->getWeight(),
         '#attributes' => ['class' => ['weight']],
@@ -183,7 +199,10 @@ class PriceRuleListBuilder extends EntityListBuilder implements FormInterface {
     $form['price_rules'] = [
       '#type' => 'table',
       '#header' => $this->buildHeader(),
-      '#empty' => $this->t('There are no @label yet.', ['@label' => $this->entityType->getPluralLabel()]),
+      '#empty' => $this->t(
+        'There are no @label yet.',
+        ['@label' => $this->entityType->getPluralLabel()]
+      ),
     ];
     foreach ($this->entities as $entity) {
       $row = $this->buildRow($entity);
@@ -228,12 +247,41 @@ class PriceRuleListBuilder extends EntityListBuilder implements FormInterface {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state->getValue('price_rules') as $id => $value) {
-      if (isset($this->entities[$id]) && $this->entities[$id]->getWeight() != $value['weight']) {
-        // Save entity only when its weight was changed.
-        $this->entities[$id]->setWeight($value['weight']);
-        $this->entities[$id]->save();
+      // Save entity only when its weight was changed.
+      if (!isset($this->entities[$id])) {
+        continue;
       }
+
+      if ($this->entities[$id]->getWeight() == $value['weight']) {
+        continue;
+      }
+
+      $this->entities[$id]->setWeight($value['weight']);
+      $this->entities[$id]->save();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+
+    // Add an operation for managing a rule's list, if the rule has a price list
+    // calculation plugin.
+    $plugin_configuration = $entity->getCalculation()->getConfiguration();
+    if (!empty($plugin_configuration['price_list_id'])) {
+      $operations['manage_list'] = [
+        'title' => $this->t('Manage List'),
+        'url' => Url::fromRoute(
+          'view.commerce_price_rule_manage_price_list_items.page',
+          ['arg_0' => $plugin_configuration['price_list_id']]
+        ),
+        'weight' => 0,
+      ];
+    }
+
+    return $operations;
   }
 
 }

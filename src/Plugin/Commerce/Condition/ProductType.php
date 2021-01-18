@@ -4,10 +4,12 @@ namespace Drupal\commerce_price_rule\Plugin\Commerce\Condition;
 
 use Drupal\commerce\EntityHelper;
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionBase;
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,14 +23,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   entity_type = "commerce_product",
  * )
  */
-class ProductType extends ConditionBase implements ContainerFactoryPluginInterface {
+class ProductType extends ConditionBase implements
+  ContainerFactoryPluginInterface {
 
   /**
    * The product type storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $product_type_storage;
+  protected $productTypeStorage;
 
   /**
    * Constructs a new ProductType object.
@@ -51,7 +54,8 @@ class ProductType extends ConditionBase implements ContainerFactoryPluginInterfa
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->product_type_storage = $entity_type_manager->getStorage('commerce_product_type');
+    $this->productTypeStorage = $entity_type_manager
+      ->getStorage('commerce_product_type');
   }
 
   /**
@@ -83,11 +87,14 @@ class ProductType extends ConditionBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $product_types = EntityHelper::extractLabels(
-      $this->product_type_storage->loadMultiple()
+      $this->productTypeStorage->loadMultiple()
     );
     $form['product_types'] = [
       '#type' => 'checkboxes',
@@ -104,7 +111,10 @@ class ProductType extends ConditionBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);

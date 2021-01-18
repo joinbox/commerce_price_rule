@@ -2,9 +2,11 @@
 
 namespace Drupal\commerce_price_rule\Plugin\Commerce\PriceRuleCalculation;
 
+use Drupal\commerce_price_rule\Entity\PriceRuleInterface;
+
 use Drupal\commerce\Context;
 use Drupal\commerce_price\Price;
-use Drupal\commerce_price_rule\Entity\PriceRuleInterface;
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -31,7 +33,10 @@ class FixedAmountOff extends PriceRuleCalculationBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ) {
     $form += parent::buildConfigurationForm($form, $form_state);
 
     $amount = $this->configuration['amount'];
@@ -53,7 +58,10 @@ class FixedAmountOff extends PriceRuleCalculationBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     parent::submitConfigurationForm($form, $form_state);
 
     $values = $form_state->getValue($form['#parents']);

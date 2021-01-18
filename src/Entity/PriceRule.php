@@ -6,9 +6,9 @@ use Drupal\commerce\ConditionGroup;
 use Drupal\commerce\Context;
 use Drupal\commerce\PurchasableEntityInterface;
 use Drupal\user\Entity\User;
+
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
@@ -61,6 +61,11 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "collection" = "/admin/commerce/price-rules",
  *   },
  * )
+ *
+ * @I Move methods that require the service container to a manager class
+ *    type     : task
+ *    priority : medium
+ *    labels   : coding-standards, 2.0@alpha
  */
 class PriceRule extends ContentEntityBase implements PriceRuleInterface {
 
@@ -142,7 +147,8 @@ class PriceRule extends ContentEntityBase implements PriceRuleInterface {
    */
   public function setCalculation($calculation) {
     $this->calculation->target_plugin_id = $calculation->getPluginId();
-    $this->calculation->target_plugin_configuration = $calculation->getConfiguration();
+    $this->calculation->target_plugin_configuration = $calculation
+      ->getConfiguration();
     return $this;
   }
 
@@ -205,7 +211,10 @@ class PriceRule extends ContentEntityBase implements PriceRuleInterface {
    * {@inheritdoc}
    */
   public function setEndDate(DrupalDateTime $end_date = NULL) {
-    $this->get('end_date')->value = $end_date ? $end_date->format('Y-m-d') : NULL;
+    $this->get('end_date')->value = $end_date
+      ? $end_date->format('Y-m-d')
+      : NULL;
+
     return $this;
   }
 
@@ -299,12 +308,18 @@ class PriceRule extends ContentEntityBase implements PriceRuleInterface {
     }
 
     // Product variation conditions.
-    $product_variation_conditions = array_filter($conditions, function ($condition) {
-      /** @var \Drupal\commerce\Plugin\Commerce\Condition\ConditionInterface $condition */
-      return $condition->getEntityTypeId() == 'commerce_product_variation';
-    });
+    $product_variation_conditions = array_filter(
+      $conditions,
+      function ($condition) {
+        /** @var \Drupal\commerce\Plugin\Commerce\Condition\ConditionInterface $condition */
+        return $condition->getEntityTypeId() == 'commerce_product_variation';
+      }
+    );
     if (!empty($product_variation_conditions)) {
-      $product_variation_conditions = new ConditionGroup($product_variation_conditions, 'AND');
+      $product_variation_conditions = new ConditionGroup(
+        $product_variation_conditions,
+        'AND'
+      );
       if (!$product_variation_conditions->evaluate($entity)) {
         return FALSE;
       }
@@ -354,7 +369,9 @@ class PriceRule extends ContentEntityBase implements PriceRuleInterface {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+  public static function baseFieldDefinitions(
+    EntityTypeInterface $entity_type
+  ) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['name'] = BaseFieldDefinition::create('string')
@@ -375,7 +392,9 @@ class PriceRule extends ContentEntityBase implements PriceRuleInterface {
 
     $fields['description'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Description'))
-      ->setDescription(t('Additional information about the price rule to show to the customer'))
+      ->setDescription(t(
+        'Additional information about the price rule to show to the customer'
+      ))
       ->setTranslatable(TRUE)
       ->setDefaultValue('')
       ->setDisplayOptions('form', [
@@ -421,7 +440,7 @@ class PriceRule extends ContentEntityBase implements PriceRuleInterface {
           'entity_types' => [
             'commerce_product',
             'commerce_product_variation',
-            'user'
+            'user',
           ],
         ],
       ]);
@@ -462,7 +481,9 @@ class PriceRule extends ContentEntityBase implements PriceRuleInterface {
 
     $fields['weight'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Weight'))
-      ->setDescription(t('The weight of this price rule in relation to others.'))
+      ->setDescription(t(
+        'The weight of this price rule in relation to others.'
+      ))
       ->setDefaultValue(0);
 
     return $fields;
