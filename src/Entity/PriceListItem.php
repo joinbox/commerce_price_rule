@@ -200,6 +200,22 @@ class PriceListItem extends ContentEntityBase implements
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['reduced_price'] = BaseFieldDefinition::create('commerce_price')
+      ->setLabel(t('Reduced Price'))
+      ->setDescription(t('The reduced price list item price'))
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'commerce_price_default',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'commerce_price_default',
+        'weight' => 0,
+      ])
+      ->setRequired(FALSE)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['min_quantity'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Minimum Quantity'))
       ->setDescription(t(

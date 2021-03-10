@@ -196,7 +196,7 @@ class PriceList extends PriceRuleCalculationBase {
     // from the database.
     $query = $this->databaseConnection
       ->select('commerce_price_rule_list_item', 'li')
-      ->fields('li', ['price__number', 'price__currency_code'])
+      ->fields('li', ['price__number', 'price__currency_code', 'reduced_price__number'])
       ->condition('li.price_list_id', $this->configuration['price_list_id'])
       ->condition('li.product_variation_id', $entity->id())
       ->condition('li.status', 1)
@@ -225,7 +225,7 @@ class PriceList extends PriceRuleCalculationBase {
 
     if ($result) {
       return new Price(
-        $result['price__number'],
+        empty($result['reduced_price__number']) ? $result['price__number'] : $result['reduced_price__number'],
         $result['price__currency_code']
       );
     }
