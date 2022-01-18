@@ -78,7 +78,7 @@ class PriceRuleStorage extends CommerceContentEntityStorage implements
       $language_manager,
       $memory_cache,
       $entity_type_bundle_info,
-      $entity_type_manager,
+      $entity_type_manager
     );
     $this->$event_dispatcher = $$event_dispatcher;
     $this->time = $time;
