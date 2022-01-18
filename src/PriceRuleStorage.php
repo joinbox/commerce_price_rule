@@ -34,6 +34,8 @@ class PriceRuleStorage extends CommerceContentEntityStorage implements
    */
   protected $time;
 
+  protected $eventDispatcher;
+
   /**
    * Constructs a new PriceRuleStorage object.
    *
@@ -80,7 +82,7 @@ class PriceRuleStorage extends CommerceContentEntityStorage implements
       $entity_type_bundle_info,
       $entity_type_manager
     );
-    $this->event_dispatcher = $event_dispatcher;
+    $this->eventDispatcher = $event_dispatcher;
     $this->time = $time;
   }
 
@@ -126,7 +128,7 @@ class PriceRuleStorage extends CommerceContentEntityStorage implements
 
     // Allow other modules to modify the query before we execute it.
     $event = new LoadAvailablePriceRulesEvent($query);
-    $this->eventDispatcher->dispatch(PriceRuleEvents::LOAD_AVAILABLE, $event);
+    $this->eventDispatcher->dispatch($event);
 
     $result = $query->execute();
     if (empty($result)) {
